@@ -10,7 +10,7 @@ public class MinMaxPlayer implements IPlayer{
 
     public MinMaxPlayer(int maxDepth){
         minMaxAlgorithm = null;
-        this.maxDepth = maxDepth;
+        this.maxDepth = maxDepth > 1 ? maxDepth : 4;
     }
 
     @Override

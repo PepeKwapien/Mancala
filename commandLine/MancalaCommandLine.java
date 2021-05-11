@@ -3,7 +3,7 @@ package commandLine;
 import game.Game;
 import players.IPlayer;
 import players.MinMaxPlayer;
-import players.Player;
+import players.CommandPlayer;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -34,7 +34,7 @@ public class MancalaCommandLine {
         int answer = askForPositiveNumberWithDefaultValue(1);
 
         if(answer == 1){
-            return new Player();
+            return new CommandPlayer();
         }
         else if(answer == 2){
             return askAboutMinMax();
@@ -152,7 +152,7 @@ public class MancalaCommandLine {
 
                         boolean firstRandomMove = askForRandomFirstMove();
                         System.out.println("\n##### LET US BEGIN! #####\n");
-                        (new Game(player1, player2, numPockets, numStones, firstRandomMove)).play();
+                        (new Game(player1, player2, numPockets, numStones, firstRandomMove)).play(true);
                     }
                     else{
                         System.out.println("Looks like I didn't understand you. Type 'y'/'yes' or 'n'/'no'");

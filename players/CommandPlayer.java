@@ -8,11 +8,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class Player implements IPlayer{
+public class CommandPlayer implements IPlayer{
 
-    private BufferedReader reader;
+    private final BufferedReader reader;
 
-    public Player(){
+    public CommandPlayer(){
         reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
@@ -63,12 +63,10 @@ public class Player implements IPlayer{
     }
 
     public void closeReader(){
-        if(reader != null){
             try {
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
     }
 }

@@ -2,15 +2,9 @@ package game;
 
 import gameItems.Board;
 import players.IPlayer;
-import players.Player;
+import players.CommandPlayer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Game {
     private final Board board;
@@ -38,11 +32,12 @@ public class Game {
         firstPlayer = currentPlayer;
     }
 
-    public void play(){
+    public String play(boolean printMsg){
         boolean isGameOver = false;
 
         while(!isGameOver){
-            System.out.println(board);
+            if(printMsg)
+                System.out.println(board);
 
             if(!board.isRowEmpty(currentPlayer)){
                 isGameOver = true;
@@ -54,7 +49,9 @@ public class Game {
 
                 if(isFirstMoveRandom && numOfMoves == 0){
                     currentMove = (new Random()).nextInt(6) + 1;
-                    System.out.printf("Player%d starts but made a random move: %d%n", currentPlayer + 1, currentMove);
+
+                    if(printMsg)
+                        System.out.printf("Player%d starts but made a random move: %d%n", currentPlayer + 1, currentMove);
                 }
                 else{
                     currentMove = players[currentPlayer].makeMove(currentPlayer, board); //1-6
@@ -71,7 +68,8 @@ public class Game {
             }
         }
 
-        System.out.println(board);
+        if(printMsg)
+            System.out.println(board);
 
         StringBuilder finalMessage = new StringBuilder();
 
@@ -90,12 +88,15 @@ public class Game {
         finalMessage.append(String.format("Player1's score: %d | Player2's score: %d",
                 board.getStore(0).getStones(), board.getStore(1).getStones()));
 
-        System.out.println(finalMessage);
+        if(printMsg)
+            System.out.println(finalMessage);
 
         for(int i = 0; i < 2; i++){
-            if(players[i] instanceof Player){
-                ((Player)players[i]).closeReader();
+            if(players[i] instanceof CommandPlayer){
+                ((CommandPlayer)players[i]).closeReader();
             }
         }
+
+        return finalMessage.toString();
     }
 }
