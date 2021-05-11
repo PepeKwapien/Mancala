@@ -48,7 +48,7 @@ public class Game {
                 int currentMove;
 
                 if(isFirstMoveRandom && numOfMoves == 0){
-                    currentMove = (new Random()).nextInt(6) + 1;
+                    currentMove = (new Random()).nextInt(board.getNumOfPocketsForPlayer()) + 1;
 
                     if(printMsg)
                         System.out.printf("Player%d starts but made a random move: %d%n", currentPlayer + 1, currentMove);
