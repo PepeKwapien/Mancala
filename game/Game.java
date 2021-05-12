@@ -10,7 +10,6 @@ public class Game {
     private final Board board;
     private final IPlayer[] players;
     private int currentPlayer;
-    private final int firstPlayer;
     private final boolean isFirstMoveRandom;
     private int numOfMoves;
 
@@ -21,15 +20,7 @@ public class Game {
         players[1] = player2;
         this.isFirstMoveRandom = isFirstMoveRandom;
         numOfMoves = 0;
-
-        if(Math.random() < 0.50){
-            currentPlayer = 0;
-        }
-        else{
-            currentPlayer = 1;
-        }
-
-        firstPlayer = currentPlayer;
+        currentPlayer = 0;
     }
 
     public String play(boolean printMsg){
@@ -83,7 +74,7 @@ public class Game {
             finalMessage.append("It's a draw!");
         }
 
-        finalMessage.append(String.format(" It took %d moves! (Player%d started)\n", numOfMoves, firstPlayer + 1));
+        finalMessage.append(String.format(" It took %d moves!\n", numOfMoves));
 
         finalMessage.append(String.format("Player1's score: %d | Player2's score: %d",
                 board.getStore(0).getStones(), board.getStore(1).getStones()));
