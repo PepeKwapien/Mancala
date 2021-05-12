@@ -27,7 +27,7 @@ public class MinMaxAlgorithm {
                 if(mancalaMove.getPreviousPocket() != 0){
                     int[] currentResult = Min(mancalaMove);
 
-                    if (moveToMake == null || currentResult[1] > score) {
+                    if(moveToMake == null || currentResult[1] > score) {
                         moveToMake = currentResult[0];
                         score = currentResult[1];
                     }
