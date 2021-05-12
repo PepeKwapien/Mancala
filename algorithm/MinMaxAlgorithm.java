@@ -2,68 +2,95 @@ package algorithm;
 
 import gameItems.Board;
 
+import java.util.ArrayList;
+
 public class MinMaxAlgorithm {
 
-    int maxDepth;
-    int playersNumber;
+    private final int maxDepth;
 
-    public MinMaxAlgorithm(int playersNumber, int maxDepth){
+    public MinMaxAlgorithm(int maxDepth){
         this.maxDepth = maxDepth;
-        this.playersNumber = playersNumber;
     }
 
-    public int makeMove(Board currentBoard){
-        return Max(MancalaMove.generateMancalaTree(playersNumber, playersNumber,
-                0, currentBoard, maxDepth), true)[0];
+    public int makeMove(int playersNumber, Board currentBoard){
+        return Max2(playersNumber, playersNumber, 0, currentBoard, maxDepth, false, true)[0];
     }
 
-    private int[] Max(MancalaMove root, boolean isInitial){
-
-        Integer moveToMake = null;
+    private int[] Max2(int playersNumber, int currentPlayersNumber,
+                       int previousPocket, Board board, int remainingDepth, boolean repeatMove, boolean isInitial){
+        ArrayList<Integer> availablePockets = board.getAvailableMovesForPlayer(currentPlayersNumber);
+        Integer bestPath = null;
         int score = 0;
 
-        if(!root.getChildren().isEmpty()){
-            for (MancalaMove mancalaMove : root.getChildren()) {
-                    int[] currentResult = Min(mancalaMove);
-
-                    if(moveToMake == null || currentResult[1] > score) {
-                        moveToMake = currentResult[0];
-                        score = currentResult[1];
-                    }
-            }
+        if(repeatMove){
+            return Min2(playersNumber, (currentPlayersNumber + 1)%2, previousPocket, board,
+                    remainingDepth - 1, false);
         }
         else{
-            moveToMake = root.getPreviousPocket();
-            score = root.getScore();
-        }
+            if(availablePockets.size() == 0 || remainingDepth == 1){
+                bestPath = previousPocket;
+                score = assessBoard(playersNumber, board);
+            }
+            else{
+                for(int i : availablePockets){
+                    Board clonedBoard = board.clone();
+                    boolean dontSwitchPlayer = clonedBoard.makeMove(currentPlayersNumber,
+                            i + currentPlayersNumber*board.getNumOfPocketsForPlayer() - 1);
+                    int[] childScore = Min2(playersNumber, (currentPlayersNumber + 1)%2, i,
+                            clonedBoard, remainingDepth - (dontSwitchPlayer ? 0 : 1), dontSwitchPlayer);
 
-        if(!isInitial){
-            moveToMake = root.getPreviousPocket();
-        }
-
-        return new int[]{moveToMake, score};
-    }
-
-    private int[] Min(MancalaMove root){
-        Integer moveToMake = null;
-        int score = 0;
-
-        if(!root.getChildren().isEmpty()){
-            for (MancalaMove mancalaMove : root.getChildren()) {
-                if(mancalaMove.getPreviousPocket() != 0){
-                    int[] currentResult = Max(mancalaMove, false);
-
-                    if (moveToMake == null || currentResult[1] < score) {
-                        moveToMake = currentResult[0];
-                        score = currentResult[1];
+                    if(bestPath == null || childScore[1] > score){
+                        bestPath = childScore[0];
+                        score = childScore[1];
                     }
                 }
             }
         }
-        else{
-            score = root.getScore();
+
+        if(!isInitial){
+            bestPath = previousPocket;
         }
 
-        return new int[]{root.getPreviousPocket(), score};
+        return new int[]{bestPath, score};
+    }
+
+    private int[] Min2(int playersNumber, int currentPlayersNumber,
+                       int previousPocket, Board board, int remainingDepth, boolean repeatMove){
+
+        ArrayList<Integer> availablePockets = board.getAvailableMovesForPlayer(currentPlayersNumber);
+        Integer bestPath = null;
+        int score = 0;
+
+        if(repeatMove){
+            return Max2(playersNumber, (currentPlayersNumber + 1)%2, previousPocket, board,
+                    remainingDepth - 1, false, false);
+        }
+        else{
+            if(availablePockets.size() == 0 || remainingDepth == 1){
+                score = assessBoard(playersNumber, board);
+            }
+            else{
+                for(int i : availablePockets){
+                    Board clonedBoard = board.clone();
+                    boolean dontSwitchPlayer = clonedBoard.makeMove(currentPlayersNumber,
+                            i + currentPlayersNumber*board.getNumOfPocketsForPlayer() - 1);
+                    int[] childScore = Max2(playersNumber, (currentPlayersNumber + 1)%2, i, clonedBoard,
+                            remainingDepth - (dontSwitchPlayer ? 0 : 1), dontSwitchPlayer, false);
+
+                    if(bestPath == null || childScore[1] < score){
+                        bestPath = childScore[0];
+                        score = childScore[1];
+                    }
+                }
+            }
+        }
+
+        bestPath = previousPocket;
+
+        return new int[]{bestPath, score};
+    }
+
+    private int assessBoard(int playersNumber, Board board){
+        return (board.getStore(playersNumber).getStones() - board.getStore((playersNumber + 1)%2).getStones());
     }
 }

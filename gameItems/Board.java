@@ -189,4 +189,17 @@ public class Board {
 
         return clonedBoard;
     }
+
+    public ArrayList<Integer> getAvailableMovesForPlayer(int playersNumber){
+        ArrayList<Integer> availablePockets = new ArrayList<>();
+
+        int offset = playersNumber*getNumOfPocketsForPlayer();
+        for(int i = offset; i < getNumOfPocketsForPlayer() + offset*playersNumber; i++){
+            if(getPocket(i).getStones() != 0){
+                availablePockets.add(i - offset + 1);
+            }
+        }
+
+        return availablePockets;
+    }
 }

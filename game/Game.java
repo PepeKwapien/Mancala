@@ -23,7 +23,7 @@ public class Game {
         currentPlayer = 0;
     }
 
-    public String play(boolean printMsg){
+    public void play(boolean printMsg){
         boolean isGameOver = false;
 
         while(!isGameOver){
@@ -87,7 +87,5 @@ public class Game {
                 ((CommandPlayer)players[i]).closeReader();
             }
         }
-
-        return finalMessage.toString();
     }
 }

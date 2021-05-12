@@ -18,15 +18,7 @@ public class CommandPlayer implements IPlayer{
 
     @Override
     public int makeMove(int playersNumber, Board currentBoard) {
-        ArrayList<Integer> availablePockets = new ArrayList<>();
-
-        int offset = playersNumber*currentBoard.getNumOfPocketsForPlayer();
-        for(int i = offset;
-            i < currentBoard.getNumOfPocketsForPlayer() + offset*playersNumber; i++){
-            if(currentBoard.getPocket(i).getStones() != 0){
-                availablePockets.add(i - offset + 1);
-            }
-        }
+        ArrayList<Integer> availablePockets = currentBoard.getAvailableMovesForPlayer(playersNumber);
 
         Integer move = null;
 

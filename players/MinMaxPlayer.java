@@ -16,9 +16,9 @@ public class MinMaxPlayer implements IPlayer{
     @Override
     public int makeMove(int playersNumber, Board currentBoard) {
         if(minMaxAlgorithm == null){
-            minMaxAlgorithm = new MinMaxAlgorithm(playersNumber, maxDepth);
+            minMaxAlgorithm = new MinMaxAlgorithm(maxDepth);
         }
-        int moveToMake = minMaxAlgorithm.makeMove(currentBoard);
+        int moveToMake = minMaxAlgorithm.makeMove(playersNumber, currentBoard);
         System.out.printf("Player%d chose pocket %d%n", playersNumber + 1, moveToMake);
         return moveToMake;
     }
