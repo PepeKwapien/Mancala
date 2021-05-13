@@ -1,6 +1,7 @@
 package commandLine;
 
 import game.Game;
+import players.AlphaBetaPlayer;
 import players.IPlayer;
 import players.MinMaxPlayer;
 import players.CommandPlayer;
@@ -28,7 +29,8 @@ public class MancalaCommandLine {
     private IPlayer askWhichPlayer(int playersNumber){
         System.out.printf("Player%d should be (default: Human):\n" +
                         "1 - Human\n" +
-                        "2 - MinMaxBot%n",
+                        "2 - MinMaxBot%n" +
+                        "3 - AlphaBetaBot%n",
                 playersNumber);
 
         int answer = askForPositiveNumberWithDefaultValue(1);
@@ -37,7 +39,10 @@ public class MancalaCommandLine {
             return new CommandPlayer();
         }
         else if(answer == 2){
-            return askAboutMinMax();
+            return askAboutMinMax(false);
+        }
+        else if(answer == 3){
+            return askAboutMinMax(true);
         }
         else{
             System.out.println("There is no such mode. Try again!");
@@ -45,8 +50,8 @@ public class MancalaCommandLine {
         }
     }
 
-    private MinMaxPlayer askAboutMinMax(){
-        System.out.printf("How deep do you want your MinMaxTree to be? (type small positive number greater than 1 - default: %d)%n",
+    private IPlayer askAboutMinMax(boolean isAlphaBeta){
+        System.out.printf("How deep do you want your Game Tree to be? (type small positive number greater than 1 - default: %d)%n",
                 DEFAULT_TREE_DEPTH);
         String answer = scanner.nextLine();
         if(answer.isEmpty()){
@@ -58,15 +63,15 @@ public class MancalaCommandLine {
                 numAnswer = Integer.parseInt(answer);
             } catch(NumberFormatException nfe){
                 System.out.println("This is not a number! Try again!");
-                return askAboutMinMax();
+                return askAboutMinMax(isAlphaBeta);
             }
 
             if(numAnswer < 2){
                 System.out.println("Provide positive number (greater than 1)! Try again!");
-                return askAboutMinMax();
+                return askAboutMinMax(isAlphaBeta);
             }
             else{
-                return new MinMaxPlayer(numAnswer);
+                return isAlphaBeta ? new AlphaBetaPlayer(numAnswer) : new MinMaxPlayer(numAnswer);
             }
         }
     }

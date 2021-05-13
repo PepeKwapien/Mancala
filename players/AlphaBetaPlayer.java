@@ -3,12 +3,12 @@ package players;
 import algorithm.MinMaxAlgorithm;
 import gameItems.Board;
 
-public class MinMaxPlayer implements IPlayer{
+public class AlphaBetaPlayer implements IPlayer{
 
     private final MinMaxAlgorithm minMaxAlgorithm;
 
-    public MinMaxPlayer(int maxDepth){
-        minMaxAlgorithm = new MinMaxAlgorithm(maxDepth, false);
+    public AlphaBetaPlayer(int maxDepth){
+        minMaxAlgorithm = new MinMaxAlgorithm(maxDepth, true);
     }
 
     @Override

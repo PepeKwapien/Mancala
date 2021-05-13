@@ -7,7 +7,9 @@ import java.util.ArrayList;
 public class MinMaxAlgorithm {
 
     private final int maxDepth;
+    private final boolean alphaBetaPruning;
     private final int DEFAULT_MAX_DEPTH = 4;
+    private int nodesVisited;
 
     /*
     DEPTH EXPLAINED:
@@ -16,12 +18,19 @@ public class MinMaxAlgorithm {
        (*)  (*)   (*)   - LEVEL 3
      */
 
-    public MinMaxAlgorithm(int maxDepth){
+    public MinMaxAlgorithm(int maxDepth, boolean alphaBetaPruning){
         this.maxDepth = maxDepth > 1 ? maxDepth : DEFAULT_MAX_DEPTH;
+        this.alphaBetaPruning = alphaBetaPruning;
     }
 
     public int makeMove(int playersNumber, Board currentBoard){
-        return Max(playersNumber, playersNumber, 0, currentBoard, maxDepth, false, true)[0];
+        nodesVisited = 0;
+        return Max(playersNumber, playersNumber, 0, currentBoard, maxDepth, false,
+                true, null, null)[0];
+    }
+
+    private int assessBoard(int playersNumber, Board board){
+        return (board.getStore(playersNumber).getStones() - board.getStore((playersNumber + 1)%2).getStones());
     }
 
     /**
@@ -37,10 +46,15 @@ public class MinMaxAlgorithm {
      *                   one player repeats its move
      * @param isInitial indicates if currently analyzed node is initial node in a tree. if yes it will return path
      *                  to its best child. if no it will return it's previousPocket argument
+     * @param alpha it's parameter used only when alpha-pruning was enabled. it's considered to be the best alternative
+     *              for max value
+     * @param beta it's parameter used only when alpha-pruning was enabled. it's considered to be the best alternative
+     *             for min value
      * @return array containing best pocket to chose [0] and best score you can achieve going down this path [1]
      */
-    private int[] Max(int playersNumber, int currentPlayersNumber,
-                      int previousPocket, Board board, int remainingDepth, boolean repeatMove, boolean isInitial){
+    private int[] Max(int playersNumber, int currentPlayersNumber, int previousPocket, Board board,
+                      int remainingDepth, boolean repeatMove, boolean isInitial, Integer alpha, Integer beta){
+        nodesVisited++;
         ArrayList<Integer> availablePockets = board.getAvailableMovesForPlayer(currentPlayersNumber);
         Integer bestPath = null;
         int score = 0;
@@ -48,7 +62,7 @@ public class MinMaxAlgorithm {
         // if yes then this node is a 'fake move' - it means it never takes place. other player moves again
         if(repeatMove){
             return Min(playersNumber, (currentPlayersNumber + 1)%2, previousPocket, board,
-                    remainingDepth - 1, false);
+                    remainingDepth - 1, false, alpha, beta);
         }
         else{
             if(availablePockets.size() == 0 || remainingDepth == 1){
@@ -60,14 +74,21 @@ public class MinMaxAlgorithm {
                     Board clonedBoard = board.clone();
                     boolean dontSwitchPlayer = clonedBoard.makeMove(currentPlayersNumber,
                             i + currentPlayersNumber*board.getNumOfPocketsForPlayer() - 1);
-                    
+
                     // if player can move again don't decrease remaining depth
                     int[] childScore = Min(playersNumber, (currentPlayersNumber + 1)%2, i,
-                            clonedBoard, remainingDepth - (dontSwitchPlayer ? 0 : 1), dontSwitchPlayer);
+                            clonedBoard, remainingDepth - (dontSwitchPlayer ? 0 : 1), dontSwitchPlayer,
+                            alpha, beta);
 
                     if(bestPath == null || childScore[1] > score){
                         bestPath = childScore[0];
                         score = childScore[1];
+                    }
+                    if(alphaBetaPruning && beta != null && childScore[1] >= beta){
+                        break;
+                    }
+                    if(alphaBetaPruning && (alpha == null || childScore[1] > alpha)){
+                        alpha = childScore[1];
                     }
                 }
             }
@@ -92,18 +113,22 @@ public class MinMaxAlgorithm {
      * @param remainingDepth how many more nodes should be analyzed
      * @param repeatMove indicates if this current node is a 'fake move'. algorithm inserts fake moves when
      *                   one player repeats its move
+     * @param alpha it's parameter used only when alpha-pruning was enabled. it's considered to be the best alternative
+     *              for max value in the current path
+     * @param beta it's parameter used only when alpha-pruning was enabled. it's considered to be the best alternative
+     *             for min value in the current path
      * @return array containing best pocket to chose [0] and best score you can achieve going down this path [1]
      */
-    private int[] Min(int playersNumber, int currentPlayersNumber,
-                      int previousPocket, Board board, int remainingDepth, boolean repeatMove){
-
+    private int[] Min(int playersNumber, int currentPlayersNumber, int previousPocket, Board board,
+                      int remainingDepth, boolean repeatMove, Integer alpha, Integer beta){
+        nodesVisited++;
         ArrayList<Integer> availablePockets = board.getAvailableMovesForPlayer(currentPlayersNumber);
         Integer bestPath = null;
         int score = 0;
 
         if(repeatMove){
             return Max(playersNumber, (currentPlayersNumber + 1)%2, previousPocket, board,
-                    remainingDepth - 1, false, false);
+                    remainingDepth - 1, false, false, alpha, beta);
         }
         else{
             if(availablePockets.size() == 0 || remainingDepth == 1){
@@ -115,11 +140,18 @@ public class MinMaxAlgorithm {
                     boolean dontSwitchPlayer = clonedBoard.makeMove(currentPlayersNumber,
                             i + currentPlayersNumber*board.getNumOfPocketsForPlayer() - 1);
                     int[] childScore = Max(playersNumber, (currentPlayersNumber + 1)%2, i, clonedBoard,
-                            remainingDepth - (dontSwitchPlayer ? 0 : 1), dontSwitchPlayer, false);
+                            remainingDepth - (dontSwitchPlayer ? 0 : 1), dontSwitchPlayer, false,
+                            alpha, beta);
 
                     if(bestPath == null || childScore[1] < score){
                         bestPath = childScore[0];
                         score = childScore[1];
+                    }
+                    if(alphaBetaPruning && alpha != null && childScore[1] <= alpha){
+                        break;
+                    }
+                    if(alphaBetaPruning && (beta == null || childScore[1] < beta)){
+                        beta = childScore[1];
                     }
                 }
             }
@@ -128,9 +160,5 @@ public class MinMaxAlgorithm {
         bestPath = previousPocket;
 
         return new int[]{bestPath, score};
-    }
-
-    private int assessBoard(int playersNumber, Board board){
-        return (board.getStore(playersNumber).getStones() - board.getStore((playersNumber + 1)%2).getStones());
     }
 }

@@ -27,8 +27,9 @@ public class Game {
         boolean isGameOver = false;
 
         while(!isGameOver){
-            if(printMsg)
+            if(printMsg){
                 System.out.println(board);
+            }
 
             if(!board.isRowEmpty(currentPlayer)){
                 isGameOver = true;
@@ -59,8 +60,10 @@ public class Game {
             }
         }
 
-        if(printMsg)
+        if(printMsg){
+            System.out.println("##### GAME OVER! #####");
             System.out.println(board);
+        }
 
         StringBuilder finalMessage = new StringBuilder();
 
