@@ -46,7 +46,7 @@ public class MancalaCommandLine {
     }
 
     private MinMaxPlayer askAboutMinMax(){
-        System.out.printf("How deep do you want your MinMaxTree to be? (type small positive number - default: %d)%n",
+        System.out.printf("How deep do you want your MinMaxTree to be? (type small positive number greater than 1 - default: %d)%n",
                 DEFAULT_TREE_DEPTH);
         String answer = scanner.nextLine();
         if(answer.isEmpty()){
@@ -61,8 +61,8 @@ public class MancalaCommandLine {
                 return askAboutMinMax();
             }
 
-            if(numAnswer < 0){
-                System.out.println("Provide positive number (greater than 0)! Try again!");
+            if(numAnswer < 2){
+                System.out.println("Provide positive number (greater than 1)! Try again!");
                 return askAboutMinMax();
             }
             else{

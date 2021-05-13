@@ -76,6 +76,11 @@ public class Board {
         return pockets.size()/2;
     }
 
+    /**
+     * This method cleans pockets and assigns remaining stones to other player
+     *
+     * @param playersNumber number of a player that couldn't move (had all pockets empty)
+     */
     public void finishGame(int playersNumber){
         int stonesFromBoard = 0;
         for(int i = 0; i < getNumOfPocketsForPlayer()*2; i++){
@@ -85,7 +90,18 @@ public class Board {
         getStore((playersNumber + 1)%2).addStones(stonesFromBoard);
     }
 
+    /**
+     *
+     * @param playersNumber number of a player that made a move
+     * @param pocketIndex index of a chosen pocket (0 - 2*(number of pockets for one player))
+     * @return returns true if player that just made a move can move again. false otherwise
+     */
     public boolean makeMove(int playersNumber, int pocketIndex){
+        if(!(playersNumber*getNumOfPocketsForPlayer() <= pocketIndex
+                && pocketIndex < (playersNumber + 1)*getNumOfPocketsForPlayer())){
+            throw new IllegalArgumentException("Hands off of other player's pockets!");
+        }
+
         int stones = getPocket(pocketIndex).flush();
         boolean hasScoredLastIteration = false;
         boolean canMoveAgain = false;
@@ -107,6 +123,7 @@ public class Board {
                     ++pocketIndex;
                 }
             }
+
             //adding points (player1 scores)
             else if(pocketIndex == getNumOfPocketsForPlayer()*2 - 1 && playersNumber == 0
                     && !hasScoredLastIteration){
