@@ -161,4 +161,8 @@ public class MinMaxAlgorithm {
 
         return new int[]{bestPath, score};
     }
+
+    public int getNodesVisited(){
+        return nodesVisited;
+    }
 }

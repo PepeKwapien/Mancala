@@ -1,7 +1,6 @@
 package commandLine;
 
 import game.Game;
-import players.AlphaBetaPlayer;
 import players.IPlayer;
 import players.MinMaxPlayer;
 import players.CommandPlayer;
@@ -55,7 +54,7 @@ public class MancalaCommandLine {
                 DEFAULT_TREE_DEPTH);
         String answer = scanner.nextLine();
         if(answer.isEmpty()){
-            return new MinMaxPlayer(DEFAULT_TREE_DEPTH);
+            return new MinMaxPlayer(DEFAULT_TREE_DEPTH, isAlphaBeta);
         }
         else{
             int numAnswer;
@@ -71,7 +70,7 @@ public class MancalaCommandLine {
                 return askAboutMinMax(isAlphaBeta);
             }
             else{
-                return isAlphaBeta ? new AlphaBetaPlayer(numAnswer) : new MinMaxPlayer(numAnswer);
+                return new MinMaxPlayer(numAnswer, isAlphaBeta);
             }
         }
     }

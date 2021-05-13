@@ -3,7 +3,9 @@ package game;
 import gameItems.Board;
 import players.IPlayer;
 import players.CommandPlayer;
+import players.MinMaxPlayer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
@@ -12,6 +14,8 @@ public class Game {
     private int currentPlayer;
     private final boolean isFirstMoveRandom;
     private int numOfMoves;
+    private long timeElapsed;
+    private int winnersNumber;
 
     public Game(IPlayer player1, IPlayer player2, int numOfPockets, int numOfStones, boolean isFirstMoveRandom){
         board = new Board(numOfPockets, numOfStones);
@@ -21,10 +25,12 @@ public class Game {
         this.isFirstMoveRandom = isFirstMoveRandom;
         numOfMoves = 0;
         currentPlayer = 0;
+        winnersNumber = -1;
     }
 
     public void play(boolean printMsg){
         boolean isGameOver = false;
+        timeElapsed = System.currentTimeMillis();
 
         while(!isGameOver){
             if(printMsg){
@@ -60,6 +66,8 @@ public class Game {
             }
         }
 
+        timeElapsed = System.currentTimeMillis() - timeElapsed;
+
         if(printMsg){
             System.out.println("##### GAME OVER! #####");
             System.out.println(board);
@@ -69,9 +77,11 @@ public class Game {
 
         if(board.getStore(0).getStones() > board.getStore(1).getStones()){
             finalMessage.append("Player1 has won!");
+            winnersNumber = 0;
         }
         else if(board.getStore(0).getStones() < board.getStore(1).getStones()){
             finalMessage.append("Player2 has won!");
+            winnersNumber = 1;
         }
         else{
             finalMessage.append("It's a draw!");
@@ -90,5 +100,19 @@ public class Game {
                 ((CommandPlayer)players[i]).closeReader();
             }
         }
+    }
+
+    public ArrayList<Number> getMeasurements(){
+        ArrayList<Number> measurements = new ArrayList<>();
+        measurements.add(timeElapsed);
+        int playersIndex = winnersNumber != -1 ? winnersNumber : 0;
+        measurements.add(players[playersIndex].getTimeElapsed());
+        measurements.add(players[playersIndex].getNumOfMovesMade());
+
+        if(players[playersIndex] instanceof MinMaxPlayer){
+            measurements.add(((MinMaxPlayer) players[playersIndex]).getNumOfNodesVisited());
+        }
+
+        return measurements;
     }
 }

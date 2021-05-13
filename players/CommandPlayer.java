@@ -11,13 +11,19 @@ import java.util.stream.Collectors;
 public class CommandPlayer implements IPlayer{
 
     private final BufferedReader reader;
+    private int numOfMoves;
+    private long elapsedTime;
 
     public CommandPlayer(){
         reader = new BufferedReader(new InputStreamReader(System.in));
+        numOfMoves = 0;
+        elapsedTime = 0;
     }
 
     @Override
     public int makeMove(int playersNumber, Board currentBoard) {
+        numOfMoves++;
+        long startTime = System.currentTimeMillis();
         ArrayList<Integer> availablePockets = currentBoard.getAvailableMovesForPlayer(playersNumber);
 
         Integer move = null;
@@ -50,8 +56,19 @@ public class CommandPlayer implements IPlayer{
                 System.out.println("Type in number of a pocket!");
             }
         }
+        elapsedTime += System.currentTimeMillis() - startTime;
 
         return move;
+    }
+
+    @Override
+    public int getNumOfMovesMade() {
+        return numOfMoves;
+    }
+
+    @Override
+    public long getTimeElapsed() {
+        return elapsedTime;
     }
 
     public void closeReader(){

@@ -10,4 +10,6 @@ public interface IPlayer {
      * @return index of chosen pocket (1 - number of pockets for one player)
      */
     int makeMove(int playersNumber, Board currentBoard);
+    int getNumOfMovesMade();
+    long getTimeElapsed();
 }
