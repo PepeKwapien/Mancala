@@ -6,11 +6,13 @@ import gameItems.Board;
 public class MinMaxPlayer implements IPlayer{
 
     private final MinMaxAlgorithm minMaxAlgorithm;
+    private final boolean printMsg;
     private int numOfMoves;
     private long elapsedTime;
 
-    public MinMaxPlayer(int maxDepth, boolean isAlphaBeta){
+    public MinMaxPlayer(int maxDepth, boolean isAlphaBeta, boolean printMsg){
         minMaxAlgorithm = new MinMaxAlgorithm(maxDepth, isAlphaBeta);
+        this.printMsg = printMsg;
         numOfMoves = 0;
         elapsedTime = 0;
     }
@@ -21,7 +23,11 @@ public class MinMaxPlayer implements IPlayer{
         long startTime = System.currentTimeMillis();
         int moveToMake = minMaxAlgorithm.makeMove(playersNumber, currentBoard);
         elapsedTime += System.currentTimeMillis() - startTime;
-        System.out.printf("Player%d chose pocket %d%n", playersNumber + 1, moveToMake);
+
+        if(printMsg){
+            System.out.printf("Player%d chose pocket %d%n", playersNumber + 1, moveToMake);
+        }
+
         return moveToMake;
     }
 
@@ -35,7 +41,7 @@ public class MinMaxPlayer implements IPlayer{
         return elapsedTime;
     }
 
-    public int getNumOfNodesVisited(){
-        return minMaxAlgorithm.getNodesVisited();
+    public int getNumOfNodesVisitedTotal(){
+        return minMaxAlgorithm.getNodesVisitedTotal();
     }
 }

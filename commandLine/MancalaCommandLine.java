@@ -54,7 +54,7 @@ public class MancalaCommandLine {
                 DEFAULT_TREE_DEPTH);
         String answer = scanner.nextLine();
         if(answer.isEmpty()){
-            return new MinMaxPlayer(DEFAULT_TREE_DEPTH, isAlphaBeta);
+            return new MinMaxPlayer(DEFAULT_TREE_DEPTH, isAlphaBeta, true);
         }
         else{
             int numAnswer;
@@ -70,7 +70,7 @@ public class MancalaCommandLine {
                 return askAboutMinMax(isAlphaBeta);
             }
             else{
-                return new MinMaxPlayer(numAnswer, isAlphaBeta);
+                return new MinMaxPlayer(numAnswer, isAlphaBeta, true);
             }
         }
     }

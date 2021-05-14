@@ -110,7 +110,16 @@ public class Game {
         measurements.add(players[playersIndex].getNumOfMovesMade());
 
         if(players[playersIndex] instanceof MinMaxPlayer){
-            measurements.add(((MinMaxPlayer) players[playersIndex]).getNumOfNodesVisited());
+            measurements.add(((MinMaxPlayer) players[playersIndex]).getNumOfNodesVisitedTotal());
+        }
+
+        playersIndex = (playersIndex + 1)%2;
+
+        measurements.add(players[playersIndex].getTimeElapsed());
+        measurements.add(players[playersIndex].getNumOfMovesMade());
+
+        if(players[playersIndex] instanceof MinMaxPlayer){
+            measurements.add(((MinMaxPlayer) players[playersIndex]).getNumOfNodesVisitedTotal());
         }
 
         return measurements;

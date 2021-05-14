@@ -9,7 +9,8 @@ public class MinMaxAlgorithm {
     private final int maxDepth;
     private final boolean alphaBetaPruning;
     private final int DEFAULT_MAX_DEPTH = 4;
-    private int nodesVisited;
+    private int nodesVisitedThisMove;
+    private int nodesVisitedTotal;
 
     /*
     DEPTH EXPLAINED:
@@ -21,10 +22,11 @@ public class MinMaxAlgorithm {
     public MinMaxAlgorithm(int maxDepth, boolean alphaBetaPruning){
         this.maxDepth = maxDepth > 1 ? maxDepth : DEFAULT_MAX_DEPTH;
         this.alphaBetaPruning = alphaBetaPruning;
+        nodesVisitedTotal = 0;
     }
 
     public int makeMove(int playersNumber, Board currentBoard){
-        nodesVisited = 0;
+        nodesVisitedThisMove = 0;
         return Max(playersNumber, playersNumber, 0, currentBoard, maxDepth, false,
                 true, null, null)[0];
     }
@@ -54,7 +56,8 @@ public class MinMaxAlgorithm {
      */
     private int[] Max(int playersNumber, int currentPlayersNumber, int previousPocket, Board board,
                       int remainingDepth, boolean repeatMove, boolean isInitial, Integer alpha, Integer beta){
-        nodesVisited++;
+        nodesVisitedThisMove++;
+        nodesVisitedTotal++;
         ArrayList<Integer> availablePockets = board.getAvailableMovesForPlayer(currentPlayersNumber);
         Integer bestPath = null;
         int score = 0;
@@ -121,7 +124,8 @@ public class MinMaxAlgorithm {
      */
     private int[] Min(int playersNumber, int currentPlayersNumber, int previousPocket, Board board,
                       int remainingDepth, boolean repeatMove, Integer alpha, Integer beta){
-        nodesVisited++;
+        nodesVisitedThisMove++;
+        nodesVisitedTotal++;
         ArrayList<Integer> availablePockets = board.getAvailableMovesForPlayer(currentPlayersNumber);
         Integer bestPath = null;
         int score = 0;
@@ -162,7 +166,11 @@ public class MinMaxAlgorithm {
         return new int[]{bestPath, score};
     }
 
-    public int getNodesVisited(){
-        return nodesVisited;
+    public int getNodesVisitedThisMove(){
+        return nodesVisitedThisMove;
+    }
+
+    public int getNodesVisitedTotal(){
+        return nodesVisitedTotal;
     }
 }
