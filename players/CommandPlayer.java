@@ -23,7 +23,7 @@ public class CommandPlayer implements IPlayer{
     @Override
     public int makeMove(int playersNumber, Board currentBoard) {
         numOfMoves++;
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         ArrayList<Integer> availablePockets = currentBoard.getAvailableMovesForPlayer(playersNumber);
 
         Integer move = null;
@@ -56,7 +56,7 @@ public class CommandPlayer implements IPlayer{
                 System.out.println("Type in number of a pocket!");
             }
         }
-        elapsedTime += System.currentTimeMillis() - startTime;
+        elapsedTime += System.nanoTime() - startTime;
 
         return move;
     }

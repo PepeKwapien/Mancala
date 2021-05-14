@@ -20,9 +20,9 @@ public class MinMaxPlayer implements IPlayer{
     @Override
     public int makeMove(int playersNumber, Board currentBoard) {
         numOfMoves++;
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         int moveToMake = minMaxAlgorithm.makeMove(playersNumber, currentBoard);
-        elapsedTime += System.currentTimeMillis() - startTime;
+        elapsedTime += System.nanoTime() - startTime;
 
         if(printMsg){
             System.out.printf("Player%d chose pocket %d%n", playersNumber + 1, moveToMake);

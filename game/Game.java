@@ -30,7 +30,7 @@ public class Game {
 
     public void play(boolean printMsg){
         boolean isGameOver = false;
-        timeElapsed = System.currentTimeMillis();
+        timeElapsed = System.nanoTime();
 
         while(!isGameOver){
             if(printMsg){
@@ -66,7 +66,7 @@ public class Game {
             }
         }
 
-        timeElapsed = System.currentTimeMillis() - timeElapsed;
+        timeElapsed = System.nanoTime() - timeElapsed;
 
         if(printMsg){
             System.out.println("##### GAME OVER! #####");
