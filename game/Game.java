@@ -105,6 +105,9 @@ public class Game {
     public ArrayList<Number> getMeasurements(){
         ArrayList<Number> measurements = new ArrayList<>();
         measurements.add(timeElapsed);
+        measurements.add(numOfMoves);
+        measurements.add(winnersNumber);
+
         int playersIndex = winnersNumber != -1 ? winnersNumber : 0;
         measurements.add(players[playersIndex].getTimeElapsed());
         measurements.add(players[playersIndex].getNumOfMovesMade());

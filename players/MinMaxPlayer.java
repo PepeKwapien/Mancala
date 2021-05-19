@@ -1,6 +1,7 @@
 package players;
 
 import algorithm.MinMaxAlgorithm;
+import assessBoard.IAssessBoard;
 import gameItems.Board;
 
 public class MinMaxPlayer implements IPlayer{
@@ -10,8 +11,8 @@ public class MinMaxPlayer implements IPlayer{
     private int numOfMoves;
     private long elapsedTime;
 
-    public MinMaxPlayer(int maxDepth, boolean isAlphaBeta, boolean printMsg){
-        minMaxAlgorithm = new MinMaxAlgorithm(maxDepth, isAlphaBeta);
+    public MinMaxPlayer(int maxDepth, boolean isAlphaBeta, boolean printMsg, IAssessBoard iAssessBoard){
+        minMaxAlgorithm = new MinMaxAlgorithm(maxDepth, isAlphaBeta, iAssessBoard);
         this.printMsg = printMsg;
         numOfMoves = 0;
         elapsedTime = 0;

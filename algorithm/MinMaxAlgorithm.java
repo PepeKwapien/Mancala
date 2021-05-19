@@ -1,5 +1,6 @@
 package algorithm;
 
+import assessBoard.IAssessBoard;
 import gameItems.Board;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class MinMaxAlgorithm {
     private final int DEFAULT_MAX_DEPTH = 4;
     private int nodesVisitedThisMove;
     private int nodesVisitedTotal;
+    private IAssessBoard iAssessBoard;
 
     /*
     DEPTH EXPLAINED:
@@ -19,9 +21,10 @@ public class MinMaxAlgorithm {
        (*)  (*)   (*)   - LEVEL 3
      */
 
-    public MinMaxAlgorithm(int maxDepth, boolean alphaBetaPruning){
+    public MinMaxAlgorithm(int maxDepth, boolean alphaBetaPruning, IAssessBoard iAssessBoard){
         this.maxDepth = maxDepth > 1 ? maxDepth : DEFAULT_MAX_DEPTH;
         this.alphaBetaPruning = alphaBetaPruning;
+        this.iAssessBoard = iAssessBoard;
         nodesVisitedTotal = 0;
     }
 
@@ -32,7 +35,7 @@ public class MinMaxAlgorithm {
     }
 
     private int assessBoard(int playersNumber, Board board){
-        return (board.getStore(playersNumber).getStones() - board.getStore((playersNumber + 1)%2).getStones());
+        return iAssessBoard.assessBoard(playersNumber, board);
     }
 
     /**

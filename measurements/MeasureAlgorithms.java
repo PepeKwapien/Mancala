@@ -1,5 +1,8 @@
 package measurements;
 
+import assessBoard.IAssessBoard;
+import assessBoard.MyEmptyPockets;
+import assessBoard.PointDifference;
 import game.Game;
 import players.MinMaxPlayer;
 
@@ -34,23 +37,40 @@ public class MeasureAlgorithms {
         return true;
     }
 
-    public static void measureMinMaxNTimes(int repetitions, boolean alphaBetaPruning, int maxDepth,
-                                           int pockets, int stones){
+    public static void measureMinMaxNTimes(int repetitions, boolean alphaBetaPruning1, boolean alphaBetaPruning2,
+                                           int maxDepth1, int maxDepth2, int pockets, int stones,
+                                           IAssessBoard iAssessBoard1, IAssessBoard iAssessBoard2){
         repetitions = repetitions > 0 ? repetitions : DEFAULT_REPETITIONS;
-        maxDepth = maxDepth > 1 ? maxDepth : DEFAULT_DEPTH;
+        maxDepth1 = maxDepth1 > 1 ? maxDepth1 : DEFAULT_DEPTH;
+        maxDepth2 = maxDepth2 > 1 ? maxDepth2 : DEFAULT_DEPTH;
         pockets = pockets > 0 ? pockets : DEFAULT_POCKETS;
         stones = stones > 0 ? stones : DEFAULT_STONES;
 
         for(int i = 0; i < repetitions; i++){
-            Game iterationGame = new Game(new MinMaxPlayer(maxDepth, alphaBetaPruning, false),
-                    new MinMaxPlayer(maxDepth, alphaBetaPruning, false), pockets, stones, false);
+            Game iterationGame = new Game(new MinMaxPlayer(maxDepth1, alphaBetaPruning1, false,
+                    iAssessBoard1), new MinMaxPlayer(maxDepth2, alphaBetaPruning2,
+                    false, iAssessBoard2), pockets, stones, false);
             iterationGame.play(false);
-            String fileName = String.format("%s-%d-%d-%d",alphaBetaPruning ? "ABvsAB" : "MMvsMM",
-                    maxDepth, pockets, stones);
+
+            String fileName = String.format("%s-%d-%s_vs_%s-%d-%s_%d_%d",alphaBetaPruning1 ? "AB" : "MM", maxDepth1,
+                    getABName(iAssessBoard1), alphaBetaPruning2 ? "AB" : "MM", maxDepth2, getABName(iAssessBoard2),
+                    pockets, stones);
 
             if(!printOutToFile(DIRECTORY + fileName, iterationGame.getMeasurements())){
                 i--;
             }
         }
+    }
+
+    private static String getABName(IAssessBoard iAssessBoard){
+        String name = "MTEP";
+        if(iAssessBoard instanceof PointDifference){
+            name = "PD";
+        }
+        else if (iAssessBoard instanceof MyEmptyPockets){
+            name = "MEP";
+        }
+
+        return name;
     }
 }

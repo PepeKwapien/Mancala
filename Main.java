@@ -1,3 +1,4 @@
+import assessBoard.MyTheirEmptyPockets;
 import commandLine.MancalaCommandLine;
 import measurements.MeasureAlgorithms;
 
@@ -7,8 +8,7 @@ public class Main {
         /*MancalaCommandLine commandLineInterface = new MancalaCommandLine();
         commandLineInterface.generateGameInstanceAndPlay();
         commandLineInterface.close();*/
-
-        MeasureAlgorithms.measureMinMaxNTimes(10, false, 4, 6, 4);
-        MeasureAlgorithms.measureMinMaxNTimes(10, true, 4, 6, 4);
+        MeasureAlgorithms.measureMinMaxNTimes(10, true, false, 6, 6,
+                6, 4, new MyTheirEmptyPockets(), new MyTheirEmptyPockets());
     }
 }
