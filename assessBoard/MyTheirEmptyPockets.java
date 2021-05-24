@@ -4,7 +4,8 @@ import gameItems.Board;
 
 public class MyTheirEmptyPockets implements IAssessBoard{
     private final static int MY_POCKET_WEIGHT = 2;
-    private final static int THEIR_POCKET_WEIGTH = 3;
+    private final static int THEIR_POCKET_WEIGHT = 1;
+    private final static int POINTS_WEIGHT = 3;
 
     @Override
     public int assessBoard(int playersNumber, Board board) {
@@ -16,12 +17,12 @@ public class MyTheirEmptyPockets implements IAssessBoard{
                     emptyPockets += MY_POCKET_WEIGHT;
                 }
                 else{
-                    emptyPockets -= THEIR_POCKET_WEIGTH;
+                    emptyPockets -= THEIR_POCKET_WEIGHT;
                 }
             }
         }
 
-        return (board.getStore(playersNumber).getStones() - board.getStore((playersNumber + 1)%2).getStones())
+        return ((board.getStore(playersNumber).getStones() - board.getStore((playersNumber + 1)%2).getStones()))*POINTS_WEIGHT
                 + emptyPockets;
     }
 }

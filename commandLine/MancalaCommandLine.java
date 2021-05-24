@@ -1,6 +1,6 @@
 package commandLine;
 
-import assessBoard.PointDifference;
+import assessBoard.PointsDifference;
 import game.Game;
 import players.IPlayer;
 import players.MinMaxPlayer;
@@ -55,7 +55,7 @@ public class MancalaCommandLine {
                 DEFAULT_TREE_DEPTH);
         String answer = scanner.nextLine();
         if(answer.isEmpty()){
-            return new MinMaxPlayer(DEFAULT_TREE_DEPTH, isAlphaBeta, true, new PointDifference());
+            return new MinMaxPlayer(DEFAULT_TREE_DEPTH, isAlphaBeta, true, new PointsDifference());
         }
         else{
             int numAnswer;
@@ -71,7 +71,7 @@ public class MancalaCommandLine {
                 return askAboutMinMax(isAlphaBeta);
             }
             else{
-                return new MinMaxPlayer(numAnswer, isAlphaBeta, true, new PointDifference());
+                return new MinMaxPlayer(numAnswer, isAlphaBeta, true, new PointsDifference());
             }
         }
     }

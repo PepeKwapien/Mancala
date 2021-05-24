@@ -2,7 +2,7 @@ package measurements;
 
 import assessBoard.IAssessBoard;
 import assessBoard.MyEmptyPockets;
-import assessBoard.PointDifference;
+import assessBoard.PointsDifference;
 import game.Game;
 import players.MinMaxPlayer;
 
@@ -64,7 +64,7 @@ public class MeasureAlgorithms {
 
     private static String getABName(IAssessBoard iAssessBoard){
         String name = "MTEP";
-        if(iAssessBoard instanceof PointDifference){
+        if(iAssessBoard instanceof PointsDifference){
             name = "PD";
         }
         else if (iAssessBoard instanceof MyEmptyPockets){
